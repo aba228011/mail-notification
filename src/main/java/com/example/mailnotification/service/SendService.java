@@ -21,27 +21,27 @@ public class SendService implements ISendService {
     private ServiceTypeRepository serviceTypeRepository;
 
     @Override
-    public void send(PaymentDTO PaymentDTO) {
-        System.out.println(PaymentDTO.getPaymentId());
+    public void send(PaymentDTO paymentDTO) {
+//        System.out.println(paymentDTO.getPaymentId());
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("it.sapiens.228@gmail.com");
         simpleMailMessage.setTo("abulai2001@gmail.com");
 
-        String title = "Тема: Оплата квитанции №" + PaymentDTO.getPaymentId();
+        String title = "Тема: Оплата квитанции №" + paymentDTO.getPaymentId();
         simpleMailMessage.setSubject(title);
 
         String serviceStrRow = "";
         double amount = 0;
-        if (PaymentDTO.getTypeOfServices().length > 0) {
-            for (ServiceClass serviceClass: PaymentDTO.getTypeOfServices()) {
+        if (paymentDTO.getTypeOfServices().length > 0) {
+            for (ServiceClass serviceClass: paymentDTO.getTypeOfServices()) {
                 ServiceTypeEntity serviceTypeEntity = serviceTypeRepository.getServiceTypeEntityByCode(serviceClass.getCodeService());
                 serviceStrRow += serviceTypeEntity.getName_ru() + " - " + serviceClass.getPriceService() + "\n";
                 amount += serviceClass.getPriceService();
             }
         }
 
-        String fullNameOfClient = clientRepository.getClientEntityByClientId(PaymentDTO.getClientId()).getFullName();
+        String fullNameOfClient = clientRepository.getClientEntityByClientId(paymentDTO.getClientId()).getFullName();
         String body = MessageFormat.format(
                 "Благодарим вас, {0}, за оплату коммунальных услуг с помощью нашего сервиса. \n" +
                         "        Оплачены услуги: \n" +
